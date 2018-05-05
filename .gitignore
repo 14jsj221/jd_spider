@@ -13,3 +13,7 @@ build
 
 # My configurations:
 venv
+res.txt
+.idea
+__pycache__
+db.sqlite3
