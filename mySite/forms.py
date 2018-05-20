@@ -19,3 +19,7 @@ class RegisterForm(forms.Form):
     email = forms.EmailField(label="邮箱地址", widget=forms.EmailInput(attrs={'class': 'form-control'}))
     sex = forms.ChoiceField(label='性别', choices=gender)
     captcha = CaptchaField(label='验证码')
+
+
+class JDSearchForm(forms.Form):
+    keyword = forms.CharField(label="商品名", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))

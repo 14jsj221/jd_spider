@@ -30,21 +30,22 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">JD Spider</a>
+          <a class="navbar-brand" href="#" style="color: #ffbd40; font-weight: bold">JingDong Spider</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="my-nav">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/">主页</a></li>
+            <li class="active"><a href="/index/">主页</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
               {% if request.session.is_login %}
                   <li><a href="#">当前在线：{{ request.session.user_name }}</a></li>
                   <li><a href="/logout/">登出</a></li>
               {% else %}
-                  <li><a href="/login/">登录</a></li>
-                  <li><a href="/register/">注册</a></li>
+                  <li><a href="/admin/" style="color: white; background: black">管理员</a></li>
+                  <li><a href="/login/" style="color: white; background: #ff7c15">登录</a></li>
+                  <li><a href="/register/" style="color: white; background: #ff1c90">注册</a></li>
               {% endif %}
           </ul>
         </div><!-- /.navbar-collapse -->
@@ -53,7 +54,10 @@
 
     {% block content %}{% endblock %}
 
-
+    <div style="margin-left: 30%; position: fixed; bottom: 10px">
+        <hr width="800px"/>
+        <p align="center">Copyright © 2018 浙江财经大学信工学院 | Design by 14计算机2 施国权</p>
+    </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

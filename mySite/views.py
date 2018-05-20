@@ -5,6 +5,7 @@ from . import forms
 import hashlib
 from django.http import JsonResponse
 from captcha.models import CaptchaStore
+from . import jdspider
 
 # Create your views here.
 
@@ -15,8 +16,32 @@ def test(request):
 
 
 def index(request):
-    pass
-    return render(request, 'login/index.html')
+    if request.method == "POST":
+        jd_search_form = forms.JDSearchForm(request.POST)
+        if jd_search_form.is_valid():
+            keyword = jd_search_form.cleaned_data['keyword']
+            goods_list = jdspider.get_html(keyword)
+            jdspider.write_to_txt(goods_list)
+            for item in goods_list:
+                t1 = ''.join(item['shop']).strip()
+                t2 = ''.join(item['price']).strip()
+                t3 = ''.join(item['comments']).strip()
+                t4 = ''.join(item['name']).strip()
+                t5 = ''.join(item['url'])
+                if t1 == '' or t2 == '' or t3 == '' or t4 == '' or t5 == '':
+                    continue
+                new_info = models.ShopInfo()
+                new_info.goods_shop = t1
+                new_info.goods_price = t2
+                new_info.goods_comments = t3
+                new_info.goods_name = t4
+                new_info.goods_url = 'https:' + t5
+                #new_info.goods_searcher = request.session.user_name
+                new_info.save()
+            return render(request, 'login/index.html', locals())
+
+    jd_search_form = forms.JDSearchForm()
+    return render(request, 'login/index.html', locals())
 
 
 def login(request):
@@ -34,7 +59,7 @@ def login(request):
                     request.session['is_login'] = True
                     request.session['user_id'] = user.id
                     request.session['user_name'] = user.name
-                    return redirect('/')
+                    return redirect('/index/')
                 else:
                     message = "密码不正确！"
             except:
@@ -87,13 +112,13 @@ def register(request):
 def logout(request):
     if not request.session.get('is_login', None):
         # 如果本来就未登录，也就没有登出一说
-        return redirect("/")
+        return redirect("/index/")
     request.session.flush()
     # 或者使用下面的方法
     # del request.session['is_login']
     # del request.session['user_id']
     # del request.session['user_name']
-    return redirect("/")
+    return redirect("/index/")
 
 
 def hash_code(s, salt='jd_spider'):# 加点盐
@@ -104,7 +129,7 @@ def hash_code(s, salt='jd_spider'):# 加点盐
 
 
 def ajax_val(request):
-    if  request.is_ajax():
+    if request.is_ajax():
         cs = CaptchaStore.objects.filter(response=request.GET['response'], hashkey=request.GET['hashkey'])
         if cs:
             json_data={'status': 1}
@@ -115,3 +140,15 @@ def ajax_val(request):
         # raise Http404
         json_data = {'status': 0}
         return JsonResponse(json_data)
+
+
+def jd_search(request):
+    if request.method == "POST":
+        jd_search_form = forms.JDSearchForm(request.POST)
+        if jd_search_form.is_valid():
+            keyword = jd_search_form.cleaned_data['keyword']
+            goods_list = jdspider.get_html(keyword)
+            jdspider.write_to_txt(goods_list)
+
+    jd_search_form = forms.JDSearchForm()
+    return render(request, 'login/index.html', locals())

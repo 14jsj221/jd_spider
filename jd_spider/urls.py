@@ -26,6 +26,5 @@ urlpatterns = [
     url(r'^logout/', views.logout),
     url(r'^test/', views.test),
     url(r'^captcha', include('captcha.urls')),
-    url(r'', views.index),
-    url('^ajax_val/', views.ajax_val, name='ajax_val'),
+    url(r'^index/', views.index),
 ]

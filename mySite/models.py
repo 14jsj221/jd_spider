@@ -26,3 +26,21 @@ class User(models.Model):
         ordering = ["-c_time"]
         verbose_name = "用户"
         verbose_name_plural = "用户"
+
+
+class ShopInfo(models.Model):
+    goods_name = models.CharField(max_length=255)
+    goods_price = models.CharField(max_length=255)
+    goods_shop = models.CharField(max_length=255)
+    goods_comments = models.CharField(max_length=255)
+    goods_url = models.CharField(max_length=250)
+    goods_searcher = models.CharField(max_length=255)
+    c_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.goods_name
+
+    class Meta:
+        ordering = ["-c_time"]
+        verbose_name = "商品信息"
+        verbose_name_plural = "商品信息"
