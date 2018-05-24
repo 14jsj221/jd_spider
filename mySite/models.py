@@ -44,3 +44,17 @@ class ShopInfo(models.Model):
         ordering = ["-c_time"]
         verbose_name = "商品信息"
         verbose_name_plural = "商品信息"
+
+
+class SearchRecord(models.Model):
+    searcher = models.CharField(max_length=255)
+    keyword = models.CharField(max_length=255)
+    c_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.searcher
+
+    class Meta:
+        ordering = ["-c_time"]
+        verbose_name = "搜索记录"
+        verbose_name_plural = "搜索记录"

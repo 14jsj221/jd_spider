@@ -23,3 +23,12 @@ class RegisterForm(forms.Form):
 
 class JDSearchForm(forms.Form):
     keyword = forms.CharField(label="商品名", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    shop = forms.CharField(label="店铺名", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    price = forms.CharField(label="价格", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+
+class ModifyForm(forms.Form):
+    old_password = forms.CharField(label="旧密码", max_length=256, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    new_password1 = forms.CharField(label="新密码", max_length=256, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    new_password2 = forms.CharField(label="确认密码", max_length=256, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    captcha = CaptchaField(label='验证码')

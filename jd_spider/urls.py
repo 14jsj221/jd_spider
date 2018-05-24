@@ -27,4 +27,8 @@ urlpatterns = [
     url(r'^test/', views.test),
     url(r'^captcha', include('captcha.urls')),
     url(r'^index/', views.index),
+    url(r'^modify/', views.modify),
+    url(r'^searchRecord/', views.search_record),
+    url(r'^searchResult/', views.search_result),
+
 ]

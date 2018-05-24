@@ -19,7 +19,12 @@ def index(request):
     if request.method == "POST":
         jd_search_form = forms.JDSearchForm(request.POST)
         if jd_search_form.is_valid():
+            username = request.session.get('user_name', None)
             keyword = jd_search_form.cleaned_data['keyword']
+            new_search = models.SearchRecord()
+            new_search.keyword = keyword
+            new_search.searcher = username
+            new_search.save()
             goods_list = jdspider.get_html(keyword)
             jdspider.write_to_txt(goods_list)
             for item in goods_list:
@@ -36,9 +41,9 @@ def index(request):
                 new_info.goods_comments = t3
                 new_info.goods_name = t4
                 new_info.goods_url = 'https:' + t5
-                #new_info.goods_searcher = request.session.user_name
+                new_info.goods_searcher = username
                 new_info.save()
-            return render(request, 'login/index.html', locals())
+            return redirect('/searchResult/')
 
     jd_search_form = forms.JDSearchForm()
     return render(request, 'login/index.html', locals())
@@ -152,3 +157,45 @@ def jd_search(request):
 
     jd_search_form = forms.JDSearchForm()
     return render(request, 'login/index.html', locals())
+
+
+def modify(request):
+    if request.method == "POST":
+        modify_form = forms.ModifyForm(request.POST)
+        message = "请检查填写的内容！"
+        if modify_form.is_valid():  # 获取数据
+            old = modify_form.cleaned_data['old_password']
+            new1 = modify_form.cleaned_data['new_password1']
+            new2 = modify_form.cleaned_data['new_password2']
+            if new1 != new2:  # 判断两次密码是否相同
+                message = "两次输入的密码不同！"
+                return render(request, 'login/modify.html', locals())
+            else:
+                username = request.session.get('user_name', None)
+                user = models.User.objects.get(name=username)
+                if user.password == hash_code(old):  # 哈希值和数据库内的值进行比对
+                    user.password = hash_code(new1)
+                    user.save()
+                    return redirect('/index/')
+                else:
+                    message = "密码不正确！"
+
+    modify_form = forms.ModifyForm()
+    return render(request, 'login/modify.html', locals())
+
+
+def search_record(request):
+    username = request.session.get('user_name', None)
+    datas = models.SearchRecord.objects.filter(searcher=username).order_by('id')
+    return render(request, 'login/searchRecord.html', {'datas': datas})
+
+
+def search_result(request):
+    if request.method == "POST":
+        jd_search_form = forms.JDSearchForm(request.POST)
+        username = request.session.get('user_name', None)
+        datas = models.ShopInfo.objects.filter(goods_searcher=username).order_by('id')
+        return render(request, 'login/searchResult.html', {'datas': datas})
+
+    jd_search_form = forms.JDSearchForm()
+    return render(request, 'login/searchResult.html', locals())

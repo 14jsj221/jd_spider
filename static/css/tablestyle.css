@@ -1,0 +1,32 @@
+table{
+    table-layout:fixed;
+    empty-cells:show;
+    border-collapse: collapse;
+    margin:0 auto;
+}
+td{
+    height:20px;
+}
+
+table.t1{
+    border:1px solid #cad9ea;
+    color:#666;
+}
+table.t1 th {
+
+    height:30px;
+}
+table.t1 td,table.t1 th{
+    border:1px solid #cad9ea;
+    padding:0 1em 0;
+}
+table.t1 tr.a1{
+    background-color:#f5fafe;
+}
+table tr:nth-child(odd){
+    background: white;
+}
+table tr:nth-child(even){
+    background: #d0e8fb;
+
+}
