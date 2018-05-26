@@ -22,9 +22,8 @@ class RegisterForm(forms.Form):
 
 
 class JDSearchForm(forms.Form):
-    keyword = forms.CharField(label="商品名", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    shop = forms.CharField(label="店铺名", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    price = forms.CharField(label="价格", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    keyword = forms.CharField(label="商品名", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                                         'placeholder': '关键字'}))
 
 
 class ModifyForm(forms.Form):

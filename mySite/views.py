@@ -6,6 +6,9 @@ import hashlib
 from django.http import JsonResponse
 from captcha.models import CaptchaStore
 from . import jdspider
+import datetime
+from django.db.models import Q
+from django.http import FileResponse
 
 # Create your views here.
 
@@ -25,6 +28,7 @@ def index(request):
             new_search.keyword = keyword
             new_search.searcher = username
             new_search.save()
+            now = datetime.datetime.now()
             goods_list = jdspider.get_html(keyword)
             jdspider.write_to_txt(goods_list)
             for item in goods_list:
@@ -42,8 +46,10 @@ def index(request):
                 new_info.goods_name = t4
                 new_info.goods_url = 'https:' + t5
                 new_info.goods_searcher = username
+                new_info.keyword = keyword
                 new_info.save()
-            return redirect('/searchResult/')
+            assets = models.ShopInfo.objects.filter(goods_searcher=username, keyword=keyword, c_time__gt=now)
+            return render(request, 'login/tableShow.html', locals())
 
     jd_search_form = forms.JDSearchForm()
     return render(request, 'login/index.html', locals())
@@ -186,16 +192,37 @@ def modify(request):
 
 def search_record(request):
     username = request.session.get('user_name', None)
-    datas = models.SearchRecord.objects.filter(searcher=username).order_by('id')
-    return render(request, 'login/searchRecord.html', {'datas': datas})
+    assets = models.SearchRecord.objects.filter(searcher=username)
+    return render(request, 'login/searchRecord.html', locals())
 
 
 def search_result(request):
     if request.method == "POST":
         jd_search_form = forms.JDSearchForm(request.POST)
-        username = request.session.get('user_name', None)
-        datas = models.ShopInfo.objects.filter(goods_searcher=username).order_by('id')
-        return render(request, 'login/searchResult.html', {'datas': datas})
+        if jd_search_form.is_valid():
+            username = request.session.get('user_name', None)
+            keyword = jd_search_form.cleaned_data['keyword']
+            assets = models.ShopInfo.objects.filter(Q(keyword__contains=keyword)|Q(goods_name__contains=keyword)
+                                                    |Q(goods_shop__contains=keyword), goods_searcher=username)
+            lists = []
+            for temp in assets:
+                item = {}
+                item['shop'] = temp.goods_shop
+                item['price'] = temp.goods_price
+                item['comments'] = temp.goods_comments
+                item['name'] = temp.goods_name
+                item['url'] = temp.goods_url
+                lists.append(item)
+            jdspider.write_to_txt(lists)
+            return render(request, 'login/tableShow.html', locals())
 
     jd_search_form = forms.JDSearchForm()
     return render(request, 'login/searchResult.html', locals())
+
+
+def download(request):
+    file = open('mySite/templates/resultFiles/res.txt', 'rb')
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="res.txt"'
+    return response

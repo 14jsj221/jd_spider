@@ -1,49 +1,23 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}搜索记录{% endblock %}
+{% block title %}查询{% endblock %}
 {% block css %}
     <link href="{% static 'css/index.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/tablestyle.css' %}" rel="stylesheet"/>
 {% endblock %}
 {% block content %}
-        <h1 align="center" >Search Result</h1>
+        <h1 align="center" >Please enter the keyword query</h1>
         <div align="center">
             <form class='form-search' action="" method="post">
 
                 {% csrf_token %}
                 <div class="input-group col-md-3" style="margin-top:90px;positon:relative">
-                    <div>
-                      {{ jd_search_form.keyword }}
-                    </div>
+                    {{ jd_search_form.keyword }}
+                    <span class="input-group-btn">
+                        <button class="btn btn-info btn-search">搜索</button>
+                    </span>
                 </div>
-                <div style="margin-top:1px; positon:relative;">
-                    <table width="1500px" border="1" class="t1">
-                      <thead>
-                        <tr>
-                            <th width="5%">序号</th>
-                            <th width="30%">商品名称</th>
-                            <th width="10%">商品价格</th>
-                            <th width="15%">所属店铺</th>
-                            <th width="10%">评论数</th>
-                            <th width="20%">链接</th>
-                            <th width="8%">搜索人</th>
-                            <th width="15%">创建时间</th>
-                        </tr>
-                      </thead>
-                         {% for data in datas %}
-                             <tr>
-                                 <td>{{ data.id }}</td>
-                                 <td>{{ data.goods_name }}</td>
-                                 <td>￥{{ data.goods_price }}</td>
-                                 <td>{{ data.goods_shop }}</td>
-                                 <td>{{ data.goods_comments }}</td>
-                                 <td><a href="{{ data.goods_url }}">{{ data.goods_url }}</a></td>
-                                 <td>{{ data.goods_searcher }}</td>
-                                 <td>{{ data.c_time }}</td>
-                            </tr>
-                         {% endfor %}
-                    </table>
-                </div>
+
           </form>
         </div>
 {% endblock %}

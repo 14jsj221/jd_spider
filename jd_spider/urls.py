@@ -30,5 +30,6 @@ urlpatterns = [
     url(r'^modify/', views.modify),
     url(r'^searchRecord/', views.search_record),
     url(r'^searchResult/', views.search_result),
+    url(r'^download/', views.download),
 
 ]

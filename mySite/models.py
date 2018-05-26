@@ -30,6 +30,7 @@ class User(models.Model):
 
 class ShopInfo(models.Model):
     goods_name = models.CharField(max_length=255)
+    keyword = models.CharField(max_length=255)
     goods_price = models.CharField(max_length=255)
     goods_shop = models.CharField(max_length=255)
     goods_comments = models.CharField(max_length=255)

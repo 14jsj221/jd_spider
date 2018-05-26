@@ -4,7 +4,7 @@
 {% block css %}<link href="{% static 'css/index.css' %}" rel="stylesheet"/>{% endblock %}
 {% block content %}
     {% if request.session.is_login %}
-        <h1 align="center" >What do you want to search?</h1>
+        <h1 align="center" >What do you want to crawl?</h1>
         <div align="center">
             <form class='form-search' action="" method="post">
 
@@ -21,4 +21,8 @@
     {% else %}
         <h1 align="center">尚未检测到你的登录状态，请先登录！</h1>
     {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
 {% endblock %}
